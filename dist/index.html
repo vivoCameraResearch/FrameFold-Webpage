@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="FrameFold: response-guided KV cache consolidation for consistent autoregressive long video generation.">
+  <meta name="theme-color" content="#2459db">
+  <title>FrameFold · Long Video Generation</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header"><a class="wordmark" href="#"><img class="nav-logo" src="assets/framefold-logo.svg" width="1576" height="315" alt="FrameFold"></a><nav aria-label="Main navigation"><a href="#showcase">Showcase</a><a href="#abstract">Abstract</a><a href="#motivation">Motivation</a><a href="#method">Method</a><a href="#comparison">Comparisons</a><a href="#results">Results</a><a href="#citation">Citation</a></nav></header>
+  <main id="main">
+    <section class="hero">
+      <h1><img class="hero-logo" src="assets/framefold-logo.svg" width="1576" height="315" alt="FrameFold" fetchpriority="high"></h1>
+      <h2>Response-Guided KV Cache Consolidation<br class="desktop-break"> for Autoregressive Long Video Generation</h2>
+      <div class="authors"><span><a href="https://github.com/brucelmy02" target="_blank" rel="noopener">Muyu Liu</a><sup>1,*</sup></span><span><a href="#">Mingming Liu</a><sup>2</sup></span><span><a href="#">Hong Gu</a><sup>2</sup></span><span><a href="https://sist.shanghaitech.edu.cn/zhangyy8/main.htm" target="_blank" rel="noopener">Yuyao Zhang</a><sup>1</sup></span><span><a href="#">Qin Lu</a><sup>2,✉</sup></span></div>
+      <p class="affiliations"><span><sup>1</sup> ShanghaiTech</span><span><sup>2</sup> vivo BlueImage Lab, vivo Mobile Communication Co., Ltd., China </span></p>
+      <p class="correspondence">✉ Corresponding author</p>
+      <p class="correspondence">* Work done during an internship at vivo.</p>
+      <!-- Add the arXiv/GitHub hrefs and remove aria-disabled when published. -->
+      <div class="hero-actions">
+        <a class="icon-button" role="link" aria-disabled="true" title="arXiv link coming soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 2h8l4 4v16H6z"/><path d="M14 2v4h4"/><path d="M8.5 12h7M8.5 15h7M8.5 18h4"/></svg><span>Paper</span></a>
+        <a class="icon-button" role="link" aria-disabled="true" title="Code will be released soon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.98 5.24.98 11.52c0 5.02 3.26 9.28 7.78 10.78.57.1.78-.25.78-.55v-2.14c-3.16.69-3.83-1.36-3.83-1.36-.52-1.31-1.26-1.66-1.26-1.66-1.03-.7.08-.69.08-.69 1.14.08 1.74 1.17 1.74 1.17 1.01 1.74 2.65 1.24 3.3.95.1-.73.4-1.24.72-1.53-2.52-.29-5.17-1.26-5.17-5.62 0-1.24.44-2.25 1.17-3.05-.12-.29-.51-1.45.11-3.02 0 0 .96-.31 3.15 1.17a10.9 10.9 0 0 1 2.87-.39c.97 0 1.95.13 2.87.39 2.19-1.48 3.15-1.17 3.15-1.17.62 1.57.23 2.73.11 3.02.73.8 1.17 1.81 1.17 3.05 0 4.37-2.65 5.33-5.18 5.61.41.35.77 1.04.77 2.1v3.11c0 .3.21.66.79.55C20.75 20.79 24 16.53 24 11.52 24 5.24 19.27.5 12 .5Z"/></svg><span>Code</span><small>Code coming soon</small></a>
+        <a class="icon-button" href="#citation" title="Jump to citation"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 1 7l11 5 9-4.09V17h2V7L12 2Z"/><path d="M5 10.18v4.5c0 1.66 3.13 3.32 7 3.32s7-1.66 7-3.32v-4.5l-7 3.18-7-3.18Z"/></svg><span>Citation</span></a>
+      </div>
+    </section>
+    <section id="showcase" class="section">
+      <div class="section-heading"><h2>Showcase</h2></div>
+      <div class="showcase-tabs" role="tablist" aria-label="Showcase baseline"><button type="button" role="tab" aria-selected="true" data-panel="selfforcing">Self Forcing</button><button type="button" role="tab" aria-selected="false" data-panel="causalforcing">Causal Forcing</button></div>
+      <div id="showcase-player"><div class="initial-slot"><span class="frame-symbol" aria-hidden="true">▻</span><strong>Selected video results</strong><span>Video assets pending · local preview</span></div></div>
+    </section>
+    <section id="abstract" class="section">
+      <div class="section-heading"><h2>Abstract</h2></div>
+      <p class="section-intro">In autoregressive video generation, retaining all historical key–value (KV) states increases memory usage and per-step attention costs as videos grow longer. A fixed cache budget bounds these costs but raises the challenge of preserving historical content that supports consistent, high-quality generation. Existing methods control cache size through history selection or consolidation, yet deciding what to retain and how to limit the loss of useful content remains a shared challenge. Our analysis shows that spatial queries depend on different historical content and that higher current attention coverage does not necessarily yield better long-video quality. We introduce FrameFold, a training-free KV cache consolidation method that compares the content retrieved by the same recent historical queries before and after merging to guide both representative construction and merge selection. Exploiting temporal redundancy between adjacent historical entries, FrameFold merges their KV states into shared representatives while retaining complete spatial grids. It fits value-merging coefficients in closed form by matching conditional attention responses, then selects the merge with the lowest remaining response distortion. Under matched KV cache budgets, experiments on Self Forcing and Causal Forcing at 30 and 60 seconds and on LongLive at 120 seconds demonstrate improved consistency and visual quality. Continuous eight-minute Self Forcing rollouts further show less quality degradation than the baselines.</p>
+    </section>
+    <div id="remaining-sections"></div>
+  </main>
+  <footer><a class="wordmark" href="#">FrameFold</a><p>ShanghaiTech &amp; vivo</p><a href="#">Back to top ↑</a></footer>
+  <p id="announcement" class="sr-only" aria-live="polite"></p>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
